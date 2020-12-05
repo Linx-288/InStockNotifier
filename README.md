@@ -3,6 +3,8 @@
 Simple python script to alert when Ryzen 5900x is in stock.
 Webpage list in sites.json can be modified for use with any product (currently tested and functional for Amazon and Newegg products).
 
+Use at your own risk. Some websites may IP ban you if they believe you are programmatically accessing their site.
+
 ## Optional Components
 - Discord Notifications via Webhooks: [Discord Webhook guide here](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
 - You can open `sites.json` in a text editor and modify the list of pages that get scanned.
