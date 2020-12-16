@@ -60,8 +60,10 @@ def os_notification(title, text):
     elif platform == PLT_WIN:
         toast.show_toast(title, text, duration=5)
     elif platform == PLT_LIN:
-        # Feel free to add something here :)
-        pass
+        # libnotify is installed by default on ubuntu and other distros
+        # it can otherwise be easily installed
+        import subprocess
+        subprocess.Popen(["notify-send", "-i", "face-cool", title, text], shell=False)
 
 def discord_notification(product, url):
     if USE_DISCORD_HOOK:
