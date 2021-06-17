@@ -19,6 +19,8 @@ PLT_MAC = "Darwin"
 load_dotenv()
 USE_DISCORD_HOOK = False
 DISCORD_WEBHOOK_URL = getenv('DISCORD_WEBHOOK_URL')
+TELEGRAM_TOKEN = getenv('TELEGRAM_TOKEN')
+TELEGRAM_CHAT = getenv('TELEGRAM_CHAT')
 ALERT_DELAY = int(getenv('ALERT_DELAY'))
 MIN_DELAY = int(getenv('MIN_DELAY'))
 MAX_DELAY = int(getenv('MAX_DELAY'))
@@ -78,7 +80,21 @@ def discord_notification(product, url):
             print(err)
         else:
             print("Payload delivered successfully, code {}.".format(result.status_code))
-
+            
+def telegram_notification(product, url):
+    if USE_TELEGRAM: 
+        TELEGRAM_URL = "https://api.telegram.org/bot{}/sendMessage".format(TELEGRAM_TOKEN)
+        data = {
+            "text": "{} in stock at {}".format(product, url),
+            "chat_id": TELEGRAM_CHAT
+        }
+        result = requests.post(TELEGRAM_URL, data=json.dumps(data), headers={"Content-Type": "application/json"})
+        try:
+            result.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            print(err)
+        else:
+            print("Payload delivered successfully, code {}.".format(result.status_code))
 
 def urllib_get(url):
     # for regular sites
