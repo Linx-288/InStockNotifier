@@ -7,7 +7,9 @@ Use at your own risk. Some websites may IP ban you if they believe you are progr
 
 ## Optional Components
 - Discord Notifications via Webhooks: [Discord Webhook guide here](https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks)
+- Telegram Notifications via Bot: [Find out how to get a token here](https://core.telegram.org/bots#6-botfather) & use a bot like [@chatid_echo_bot](t.me/chatid_echo_bot) to get your Chat ID.
 - You can open `sites.json` in a text editor and modify the list of pages that get scanned.
+
 
 ## How to Run
 
