@@ -26,6 +26,7 @@ ALERT_DELAY = int(getenv('ALERT_DELAY'))
 MIN_DELAY = int(getenv('MIN_DELAY'))
 MAX_DELAY = int(getenv('MAX_DELAY'))
 OPEN_WEB_BROWSER = getenv('OPEN_WEB_BROWSER') == 'true'
+DONT_REPEAT = getenv('DONT_REPEAT')
 
 with open('sites.json', 'r') as f:
     sites = json.load(f)
@@ -127,19 +128,19 @@ def main():
     search_count = 0
 
     exit() if is_test() else False
-
-    while True:
+    run = True
+    while run:
         now = datetime.now()
         current_time = now.strftime("%H:%M:%S")
         print("Starting search {} at {}".format(search_count, current_time))
         search_count += 1
+        disabled_sites = 0
         for site in sites:
             if site.get('enabled'):
                 print("\tChecking {}...".format(site.get('name')))
-
                 try:
                     html = urllib_get(site.get('url'))
-                    
+                     
                 except Exception as e:
                     print("\t\tConnection failed...")
                     print("\t\t{}".format(e))
@@ -149,13 +150,20 @@ def main():
                 index = html.upper().find(keyword.upper())
                 if alert_on_found and index != -1:
                     alert(site)
+                    if DONT_REPEAT:
+                        site["enabled"] = False
                 elif not alert_on_found and index == -1:
                     alert(site)
+                    if DONT_REPEAT:
+                        site["enabled"] = False
 
                 base_sleep = 1
                 total_sleep = base_sleep + random.uniform(MIN_DELAY, MAX_DELAY)
                 sleep(total_sleep)
-
-
+            else:
+                disabled_sites += 1
+                if(disabled_sites>=len(sites)):
+                    run = False
+                    print("All products have been found in stock once. This script will now stop.\n(If you want multiple alerts per site, check 'DONT_REPEAT' in .env)")
 if __name__ == '__main__':
     main()
