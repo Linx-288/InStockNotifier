@@ -25,8 +25,8 @@ TELEGRAM_CHAT = getenv('TELEGRAM_CHAT')
 ALERT_DELAY = int(getenv('ALERT_DELAY'))
 MIN_DELAY = int(getenv('MIN_DELAY'))
 MAX_DELAY = int(getenv('MAX_DELAY'))
-OPEN_WEB_BROWSER = getenv('OPEN_WEB_BROWSER') == 'true'
-DONT_REPEAT = getenv('DONT_REPEAT')
+OPEN_WEB_BROWSER = getenv('OPEN_WEB_BROWSER').capitalize() 
+DONT_REPEAT = getenv('DONT_REPEAT').capitalize() 
 
 with open('sites.json', 'r') as f:
     sites = json.load(f)
@@ -85,9 +85,9 @@ def discord_notification(product, url):
         try:
             result.raise_for_status()
         except requests.exceptions.HTTPError as err:
-            print(err)
+            print("Discord:\t"+str(err))
         else:
-            print("Payload delivered successfully, code {}.".format(result.status_code))
+            print("Discord:\tPayload delivered successfully, code {}.".format(result.status_code))
             
 def telegram_notification(product, url):
     if USE_TELEGRAM: 
@@ -100,9 +100,9 @@ def telegram_notification(product, url):
         try:
             result.raise_for_status()
         except requests.exceptions.HTTPError as err:
-            print(err)
+            print("Telegram:\t"+str(err))
         else:
-            print("Payload delivered successfully, code {}.".format(result.status_code))
+            print("Telegram:\tPayload delivered successfully, code {}.".format(result.status_code))
 
 def urllib_get(url):
     # for regular sites
@@ -150,11 +150,11 @@ def main():
                 index = html.upper().find(keyword.upper())
                 if alert_on_found and index != -1:
                     alert(site)
-                    if DONT_REPEAT:
+                    if DONT_REPEAT == 'True':
                         site["enabled"] = False
                 elif not alert_on_found and index == -1:
                     alert(site)
-                    if DONT_REPEAT:
+                    if DONT_REPEAT == 'True':
                         site["enabled"] = False
 
                 base_sleep = 1
